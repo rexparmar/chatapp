@@ -1,18 +1,26 @@
 package com.chatapp;
 
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSocketConfigInterface {
+@Configuration
+@EnableWebSocket
+@EnableWebSocketMessageBroker
+@CrossOrigin(origins = "http://localhost:3000")
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerStompEndPoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/chat").withSockJS();
+    public void registerStompEndpoints(StompEndpointRegistry registry){
+        registry.addEndpoint("/chat").setAllowedOrigins("http://localhost:3000").withSockJS();
     }
 
     @Override
-    public void configureMessageBroke(MessageBrokerRegistry registry){
+    public void configureMessageBroker(MessageBrokerRegistry registry){
         registry.enableSimpleBroker("/topic");
         registry.setApplicationDestinationPrefixes("/app");
     }
